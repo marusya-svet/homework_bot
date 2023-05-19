@@ -7,7 +7,7 @@ import requests
 import telegram.error
 
 from dotenv import load_dotenv
-from telegram import ReplyKeyboardMarkup, Bot
+from telegram import Bot
 from logging import StreamHandler
 
 load_dotenv()
@@ -39,34 +39,34 @@ logger.addHandler(handler)
 
 
 def check_tokens():
-    """Проверка доступности токенов"""
+    """Проверка доступности токенов."""
     return all((PRACTICUM_TOKEN,
                 TELEGRAM_CHAT_ID, TELEGRAM_TOKEN))
 
 
 def send_message(bot, message):
-    """Отправка сообщений в Telegram-чат"""
+    """Отправка сообщений в Telegram-чат."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
-        logging.debug(f'Сообщение отправлено!')
+        logging.debug('Сообщение отправлено!')
     except telegram.error.TelegramError as error:
         logging.error(f'Сообщение не было отправлено: {error}')
 
 
 def get_api_answer(timestamp):
-    """Запрос к API"""
+    """Запрос к API."""
     try:
         params = {'from_date': timestamp}
         response = requests.get(ENDPOINT, headers=HEADERS, params=params)
         if response.status_code != 200:
-            logging.error(f'Ошибка доступности адреса: {error}')
+            raise AssertionError('Ошибка доступности адреса')
     except requests.RequestException as error:
         logging.error(f'Ошибка запроса: {error}')
     return response.json()
 
 
 def check_response(response):
-    """проверк аответа API на соответсвие документации"""
+    """Проверк аответа API на соответсвие документации."""
     if not isinstance(response, dict):
         print(response)
         raise TypeError('Ответ не является словарем')
@@ -78,7 +78,7 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """Извлекает статус конкретной hw"""
+    """Извлекает статус конкретной hw."""
     try:
         status = homework['status']
         if status not in HOMEWORK_VERDICTS:
