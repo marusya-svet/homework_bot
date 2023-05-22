@@ -9,6 +9,7 @@ import telegram.error
 from dotenv import load_dotenv
 from telegram import Bot
 from logging import StreamHandler
+from exceptions import CustomTelegramError
 
 load_dotenv()
 
@@ -50,7 +51,7 @@ def send_message(bot, message):
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logging.debug('Сообщение отправлено!')
     except telegram.error.TelegramError as error:
-        logging.error(f'Сообщение не было отправлено: {error}')
+        raise CustomTelegramError(f'Custom tg error {error}')
 
 
 def get_api_answer(timestamp):
@@ -112,6 +113,8 @@ def main():
             else:
                 logging.debug('Статус работы еще не изменился')
             from_date = response['current_date']
+        except telegram.error.TelegramError as error:
+            logging.error(f'Сообщение не было отправлено: {error}')
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
             logging.error(message)
