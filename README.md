@@ -3,7 +3,7 @@ Telegram bot for checking hw status and sending messages if status is changed
 
 ### Tecnologies
 - Python 3.7
-- Яндекс.Практикум API
+- Практикум.Домашка API
 - 
 ### Run project in dev
 - Install and activate virtual environment
